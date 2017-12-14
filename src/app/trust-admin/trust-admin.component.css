@@ -1,0 +1,83 @@
+.trustAdmin{
+  width:100%;
+  height:450px;
+}
+.packageSection{
+  width:100%;
+  height:44%;
+  border-bottom: 2px solid gray;
+  margin-left: 5%;
+  margin-top:3%;
+}
+.affGrpSection{
+  width:100%;
+  height:44%;
+  margin-left: 5%;
+  margin-top:3%;
+}
+.affUserSection{
+  width:80%;
+  height:34%;
+  margin-left: 5%;
+}
+.labelHeading{
+  width:20%;
+  height: 100%;
+  float: left;
+  padding-top:3%;
+}
+.selection{
+  width:63%;
+  height: 100%;
+  float: left;
+  padding:5%;
+}
+a {
+  color: #004EA3;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-right: 2%;
+}
+.alable{
+  width:100%;
+  margin-top: -9%;
+  margin-bottom: 3%;
+}
+.align-center {
+  text-align: center;
+}
+.modal-title {
+  margin-left: 26%;
+}
+.modal-body{
+  font-size: 15px;
+  min-height: 200px;
+}
+.modal-element{
+  width:100%;
+  padding:5%;
+}
+.modal-label{
+  width:40%;
+  float:left;
+}
+.modal-value{
+  width:60%;
+  float: left;
+}
+.modal-dropdown{
+  width:80%;
+}
+
+.bold-text{
+  font-weight: bold;
+}
+.italic-text{
+  font-style: italic;
+}
+.underline-text{
+  text-decoration: underline;
+}
+.strike-text{
+  text-decoration: line-through;
+ }

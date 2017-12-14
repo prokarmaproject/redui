@@ -1,0 +1,311 @@
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container">
+      <div class="collapse navbar-collapse" id="navbar3SupportedContent">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/" style="width:70px;">Home  |</a><span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/trustAdmin" style="width:168px;">Trust Admin <span class="glyphicon glyphicon-search" aria-hidden="true"></span> </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+
+  <div class="trustAdmin">
+      <div class="packageSection">
+        <div class="labelHeading">
+          <label>Survey Affiliates & Users</label>
+        </div>
+        <div class="selection">
+          <div class="alable">
+            <a href="#" (click)="open(importGroup)">Import Affiliate</a>
+            <a href="#" (click)="open(editSurveyAffiliate)">Edit Survey Affiliate(s)</a>
+            <a href="#" (click)="open(copyGroups)">Copy Survey Affiliates</a>
+            <a href="#" (click)="open(deleteGroup)">Edit Survey User List</a>
+          </div>
+          <select [(ngModel)]="selectedSurvey" (change)="getAffGroupsForSurvey(selectedSurvey.surveyId)">
+            <option selected>Select Survey</option>
+            <option [ngValue]="package" *ngFor="let package of packages | sortgrid: '-createdDate'">{{package.title+ " " + package.version}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="affGrpSection">
+        <div class="labelHeading">
+          <label>RED Affiliates and Resources</label>
+        </div>
+        <div class="selection">
+          <div class="alable">
+            <a href="#" (click)="open(addGroup)">Add Affiliate</a>
+            <a href="#" (click)="open(editGroup)">Edit Affiliates</a>
+            <a href="#" (click)="open(addUser)">Add Resource</a>
+            <a href="#" (click)="open(editUser)">Edit Resource</a>
+          </div>
+          <select [(ngModel)]="groupUse" >
+            <option >Select Affiliate Group</option>
+            <option [ngValue]="group" *ngFor="let group of affiliateGroupsList">{{group.affiliateGroupName}}</option>
+          </select>
+        </div>
+      </div>      
+    </div>    
+    
+    <!-- Add Affiliate Modal -->
+    <template #addGroup let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 style="margin-left: 20%;" class="modal-title align-center">Add new Affiliate</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click');selectedGroup={}">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div>
+              <div class="modal-element">
+                  <div class="modal-label"><label> Region Name</label></div>
+                  <div class="modal-value">
+                    <input [(ngModel)]="selectedGroup.regionName"/>
+                  </div>
+                </div>
+                <div class="modal-element">
+                  <div class="modal-label"><label>Affiliate Code</label></div>
+                  <div class="modal-value">
+                    <input [(ngModel)]="selectedGroup.affiliateGroupCode"/>
+                  </div>
+                </div>
+                <div class="modal-element">
+                  <div class="modal-label"><label>Affiliate Name</label></div>
+                  <div class="modal-value"><input [(ngModel)]="selectedGroup.affiliateGroupName"/></div>
+                </div>
+          </div>          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="c('Close click');addRedAffiliate()">Add</button>
+        </div>
+    </template>
+    
+    
+    <!-- Edit group Modal -->
+    <template #editGroup  class="modal-placement" let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title align-center">Edit affiliate</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');selGrp={}">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-element">
+          <div class="modal-label"><label>Select Affiliate</label></div>
+          <div class="modal-value">
+            <select class="modal-dropdown" [(ngModel)]="selGrp">
+              <option [ngValue]="{}">Select Affiliate</option>
+              <option [ngValue]="group" *ngFor="let group of affiliateGroupsList">{{group.affiliateGroupName}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-element">
+            <div class="modal-label"><label> Region Name</label></div>
+            <div class="modal-value"><input [(ngModel)]="selGrp.regionName"/></div>
+          </div>
+          <div class="modal-element">
+            <div class="modal-label"><label>Affiliate Code</label></div>
+            <div class="modal-value"><input name="groupCode" [(ngModel)]="selGrp.affiliateGroupCode"/></div>
+          </div>
+          <div class="modal-element">
+            <div class="modal-label"><label>Affiliate Name</label></div>
+            <div class="modal-value"><input name="groupName" [(ngModel)]="selGrp.affiliateGroupName"/></div>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button style="margin-right:53%" type="button" class="btn btn-outline-dark" (click)="c('Close click');deleteRedAffiliate(selGrp.affiliateGroupId)">Remove Affiliate</button>
+        <button style="float:right" type="button" class="btn btn-outline-dark" (click)="c('Close click');editRedAffiliate()">Update</button>        
+      </div>
+    </template>
+    
+    <!-- Add Resource Modal -->
+    <template #addUser  class="modal-placement" let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title align-center">Add Resource</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');newUserGrp={};affUser={};">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-element">
+          <div class="modal-label"><label>Select Affiliate</label></div>
+          <div class="modal-value">
+            <select class="modal-dropdown" [(ngModel)]="newUserGrp">
+              <option>Select Affiliate</option>
+              <option [ngValue]="group" *ngFor="let group of affiliateGroupsList">{{group.affiliateGroupName}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-element">
+          <div class="modal-label"><label>Window ID</label></div>
+          <div class="modal-value"><input name="windowId" [(ngModel)]="affUser.windowsUserLogin"/></div>
+        </div>
+        <div class="modal-element">
+          <div class="modal-label"><label>Role</label></div>
+          <div class="modal-value">
+            <select class="modal-dropdown" [(ngModel)]="affUser.roleType"><option>Select Role</option>
+              <option [ngValue]="1">STAFF</option><option [ngValue]="2">NO ROLE</option>
+              <option [ngValue]="3">MANAGER</option><option [ngValue]="4">EXECUTIVE</option>
+              <option [ngValue]="5">CID ANALYST</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('Close click');addResource(newUserGrp.affiliateGroupId)">Add</button>
+      </div>
+    </template>
+    
+    <!-- Edit user Modal -->
+    <template #editUser  class="modal-placement" let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title align-center">Edit Resource</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="modal-element">
+              <div class="modal-label"><label>Select Affiliate</label></div>
+              <div class="modal-value">
+                <select class="modal-dropdown" [(ngModel)]="selGrp">
+                  <option>Select Affiliate</option>
+                  <option [ngValue]="group" *ngFor="let group of affiliateGroupsList">{{group.affiliateGroupName}}</option>
+                </select>
+              </div>
+            </div>
+        <div class="modal-element">
+          <div class="modal-label"><label>Select Resource</label></div>
+          <div class="modal-value"><select class="modal-dropdown" [(ngModel)]="selectedUser">
+              <option>Select Resource</option>
+              <option [ngValue]="user" *ngFor="let user of selGrp.users">{{user.windowsUserLogin}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-element">
+          <div class="modal-label"><label>Window ID</label></div>
+          <div class="modal-value"><input name="windowId" [(ngModel)]="selectedUser.windowsUserLogin"/></div>
+        </div>
+        <div class="modal-element">
+          <div class="modal-label"><label>Role</label></div>
+          <div class="modal-value">
+            <select class="modal-dropdown" [(ngModel)]="selectedUser.roleType"><option>Select Role</option>
+              <option [ngValue]="1">STAFF</option><option [ngValue]="2">NO ROLE</option>
+              <option [ngValue]="3">MANAGER</option><option [ngValue]="4">EXECUTIVE</option>
+              <option [ngValue]="5">CID ANALYST</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+          <button style="margin-right:45%" type="button" class="btn btn-outline-dark" (click)="c('Close click');deleteResource(selGrp.affiliateGroupId,selectedUser.userId)">Delete Resource</button>
+        <button type="button" class="btn btn-outline-dark" (click)="c('Close click');editResource(selectedUser,selGrp.affiliateGroupId)">Edit Resource</button>
+      </div>
+    </template>
+
+    <!-- Import Group -->
+    <template #importGroup class="modal-placement" let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title align-center">Import Affiliate</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click');selectedGroup={}">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-element">
+            <div class="modal-label"><label>Select Affiliate</label></div>
+            <div class="modal-value">
+              <select class="modal-dropdown" [(ngModel)]="selectedGroup">
+                <option>Select Affiliate</option>
+                <option [ngValue]="group" *ngFor="let group of affiliateGroupsList">{{group.affiliateGroupName}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-element">
+            <div class="modal-label"><label>To Survey</label></div>
+            <div class="modal-value">
+              <select disabled class="modal-dropdown" [(ngModel)]="selectedSurvey">
+                <option>Select Survey</option>
+                <option [ngValue]="package" *ngFor="let package of packages">{{package.title+ " " + package.version}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="c('Close click');importGroups(selectedSurvey.surveyId,selectedGroup)">Import</button>
+        </div>
+      </template>
+
+    <!-- copy Groups -->
+    <template #copyGroups class="modal-placement" let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title align-center">Copy Affiliates</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');selectedGroup={}">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-element">
+          <div class="modal-label"><label>From Survey</label></div>
+          <div class="modal-value">
+            <select class="modal-dropdown" [(ngModel)]="fromSurvey">
+              <option>Select Survey</option>
+              <option [ngValue]="package" *ngFor="let package of packages">{{package.title+ " " + package.version}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-element">
+          <div class="modal-label"><label>To Survey</label></div>
+          <div class="modal-value">
+            <select class="modal-dropdown" [(ngModel)]="toSurvey">
+              <option>Select Survey</option>
+              <option [ngValue]="package" *ngFor="let package of packages">{{package.title+ " " + package.version}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('Close click');copyGroups(fromSurvey.surveyId,toSurvey.surveyId)">Import</button>
+      </div>
+    </template>
+
+    <!-- Edit Survey Affiliates -->
+  <template #editSurveyAffiliate class="modal-placement" let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title align-center">Edit affiliate group</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click');selGrp={}">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-element">
+        <div class="modal-label"><label>Select Affiliate Group</label></div>
+        <div class="modal-value">
+          <select class="modal-dropdown" [(ngModel)]="selGrp">
+            <option>Select group</option>
+            <option [ngValue]="group" *ngFor="let group of affiliateGroups">{{group.affiliateGroupName}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-element">
+          <div class="modal-label"><label> Region Name</label></div>
+          <div class="modal-value"><input [(ngModel)]="selGrp.regionName"/></div>
+        </div>
+        <div class="modal-element">
+          <div class="modal-label"><label>Affiliate Group Code</label></div>
+          <div class="modal-value"><input name="groupCode" [(ngModel)]="selGrp.affiliateGroupCode"/></div>
+        </div>
+        <div class="modal-element">
+          <div class="modal-label"><label>Affiliate Group Name</label></div>
+          <div class="modal-value"><input name="groupName" [(ngModel)]="selGrp.affiliateGroupName"/></div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button style="margin-right:53%" type="button" class="btn btn-outline-dark" (click)="c('Close click');deleteSurveyGroups(selectedSurvey.surveyId,selGrp)">Remove Affiliate</button>
+      <button style="float:right" type="button" class="btn btn-outline-dark" (click)="c('Close click');editSurveyGroups(selectedSurvey.surveyId,selGrp)">Update</button>        
+    </div>
+  </template>

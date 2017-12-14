@@ -1,0 +1,258 @@
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container">
+      <div class="collapse navbar-collapse" id="navbar3SupportedContent">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/">Home </a><span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+<div class="panel panel-default left-margin" style="overflow-y:auto;font-size:12px;">
+  <div class="panel-body">
+    <div>
+
+<template #selUser let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 style="margin-left: 20%;" class="modal-title align-center">select User</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click');">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div *ngFor="let user of affiliateUsers">
+         <a href="#" (click)="c('Cross click');">{{user.windowsUserLogin}}</a>
+      </div>          
+    </div>
+    <!-- <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="c('Close click');">Add</button>
+    </div> -->
+</template>
+      <strong>Packages</strong>
+      <div class="left-margin" *ngFor="let package of packages;let i=index">
+        <img *ngIf="!package.openTree" (click)="package.openTree=!package.openTree" class="image-icon" src="assets/img/treeIcon.png"/>
+        <img *ngIf="package.openTree" (click)="package.openTree=!package.openTree" class="image-icon" src="assets/img/plusIcon.png"/>
+        <span class="pointer" (click)="startFlag = true;openForm = false;ques = dataStorage;currentSurvey=package;getSurveyQuestionsComp();getAffGroupsForSurvey(package.surveyId,selUser);">
+        {{package.title + " " + package.version}}
+      </span>
+        <img class="image-icon pointer" (click)="openExistingForm(package)" style="width:15px;height:15px" src="assets/img/edit.png">
+        <div *ngIf="!package.openTree" class="left-margin">
+          <div class="left-margin pointer" (click)="filterData(section)" *ngFor="let section of package.sections">
+            {{section.sectionName}}
+          </div>
+        </div>
+        
+      </div>
+      <div>
+        <span class="pointer" (click)="newSurvey()">Create New Survey</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="openForm">
+  <div class="panel2 panel-default">
+    <div class="panel-heading">
+      CREATE SURVEY
+    </div>
+    <div class="panel-body">
+      <div class="form-group">
+        <div class="each-element1">
+          <label class="label1" for="title">
+            Title
+          </label>
+          <div class="col-xs-4">
+            <input id="title" [(ngModel)]="newPackage.title" class="form-control input-sm1"/>
+          </div></div>
+        <div class="each-element1">
+          <label class="label1" for="version">
+            Version
+          </label>
+          <div class="col-xs-4">
+            <input id="version" [(ngModel)]="newPackage.version" class="form-control input-sm1 col-xs-4">
+          </div>
+        </div>
+        <div class="each-element1">
+          <label class="label1" for="lock">
+            Package Locked
+          </label>
+          <div id="lock">
+            <label><input type="radio" [(ngModel)]="newPackage.packageLocked" [value]="true"> Yes</label>
+            <label><input type="radio" [(ngModel)]="newPackage.packageLocked" [value]="false"> No </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer align-center">
+      <button *ngIf="!updateButton" class="btn btn-default" (click)="createPackage(newPackage)">Create</button>
+      <button *ngIf="updateButton" class="btn btn-default" (click)="updatePackage(newPackage)">Update</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="((!openForm) && startFlag)">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <label>Survey Tool</label>
+    </div>
+    <div class="panel-body">
+      <div class="form-group" [dragula]='"que-bag"' id="left" [dragulaModel]="tools">
+        <div class="tools-div">
+          <label>Label</label>
+        </div>
+        <div class="tools-div">
+          <label>Question Format</label>
+        </div>
+        <div class="tools-div">
+          <label><img class="image-icon" style="border:solid 1px black;" src="assets/img/textIcon.png"/> Text Box</label>
+        </div>
+        <div class="tools-div">
+          <label><img class="image-icon" src="assets/img/radioIcon.png"/> Radio Button</label>
+        </div>
+        <div class="tools-div">
+          <label><img class="image-icon" src="assets/img/checkboxIcon.png"/> Check Box</label>
+        </div>
+        <div class="tools-div">
+          <label><img class="image-icon" src="assets/img/tableIcon.png"/> Table (Fixed)</label>
+        </div>
+        <div class="tools-div">
+            <label><img class="image-icon" src="assets/img/tableIcon.png"/> Table (Variable)</label>
+          </div>
+        <div class="tools-div">
+          <label><img class="image-icon" src="assets/img/dateIcon.png"/> Date</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel2 panel-default">
+    <div class="panel-heading">
+      <label>Survey</label>
+      <button [disabled]="ques?.length <1 " class="btn btn-primary btn-right" style="line-height: 0.8;margin-top: -5px;"  (click)="saveData()">Save</button>
+    </div>
+    <div class="panel-body scroll" style="width:100%" [dragula]='"que-bag"' id="right" [dragulaModel]="ques">
+      <div class="form-group" *ngFor="let inputType of ques;let i=index;">
+        <div class="form-element">
+          <label style="cursor:pointer;" [title]="inputType.SectionName" *ngIf="!inputType.showQueBox" (click)="inputType.showQueBox=true;inputType.dummyModel=inputType.QuestionName" ><span style="float:left">{{i+1+". "}}</span><span style="float:left" [innerHtml]="inputType.QuestionName | keepHtml"></span></label>
+          <simple-tiny style="float:left" *ngIf="inputType.showQueBox==true" [(ngModel)]="inputType.dummyModel" (modelChange)="inputType.SectionName = $event" (blur)="inputType.showQueBox=false"></simple-tiny>
+          <span *ngIf="inputType.showQueBox==true" aria-hidden="true" class="fa fa-check check-icon" (click)="inputType.QuestionName=inputType.dummyModel.replace('Section 1','');inputType.showQueBox=false;"></span>
+          <!-- <div  *ngIf="inputType.showQueBox==true">
+              <input [focus]="inputType.showQueBox" class="form-control input-md"  [(ngModel)]="inputType.dummyModel" (keyup.enter)="inputType.QuestionName=inputType.dummyModel;inputType.showQueBox=false;"/>
+              
+            </div> -->
+          <select class="form-control form-dropdown" [(ngModel)]="inputType.SectionName">
+            <option class="option" value=""><label>Select value</label></option>
+            <option class="option" *ngFor="let opt of sectionOptions"><label>{{opt}}</label></option>
+          </select>
+          <img (click)="deleteElement(i)" class="delete-icon" src="assets/img/delete.png"/><br/>
+          <div *ngIf="inputType.QuestionType==0">
+              <input class="form-control input-md" [(ngModel)]="inputType.Answer.AnswerText" placeholder="{{inputType.Answer.AnswerText}}"/>
+              <br/>
+          </div>
+          <div  *ngIf="inputType.QuestionType==3">
+              <br/>
+              <label class="radio option-width" *ngFor="let item of inputType.Answer.AnswerOptionsText;let j=index;">
+                <input type="radio" name="options{{i}}" (click)="inputType.Answer.AnswerText = item" [checked]="item === inputType.Answer.AnswerText"/>
+                <span style="word-break:break-all" *ngIf="!inputType.dummyOptions[j].showOption" (click)="inputType.dummyOptions[j].showOption=true" >{{item}}<img class="edit-image" src="assets/img/edit.png"/></span>
+                <input *ngIf="inputType.dummyOptions[j].showOption"  [(ngModel)]="inputType.dummyOptions[j].dummyOptionModel" class="input-sm" (keyup.enter)="inputType.Answer.AnswerOptionsText[j]=inputType.dummyOptions[j].dummyOptionModel;inputType.dummyOptions[j].showOption=false;" (blur)="inputType.Answer.AnswerOptionsText[j]=inputType.dummyOptions[j].dummyOptionModel;inputType.dummyOptions[j].showOption=false;"/>
+              </label>
+              <button style="margin-left: 18%" class="btn" (click)="inputType.Answer.AnswerOptionsText.push('Option'+(inputType.Answer.AnswerOptionsText.length+1));inputType.dummyOptions.push({});">+</button>
+          </div>
+          <div *ngIf="inputType.QuestionType==1">
+              <br/>
+              <label class="checkbox option-width" *ngFor="let element of inputType.Answer.AnswerOptionsText; let i = index;">
+                <input type="checkbox"
+                [checked]="element==inputType.Answer.AnswerText" (change)="inputType.Answer.AnswerText=element">
+                <span style="word-break:break-all" *ngIf="!inputType.dummyOptions[i].showOption" (click)="inputType.dummyOptions[i].showOption=true" >{{element}}<img class="edit-image" src="assets/img/edit.png"/></span>
+                <input *ngIf="inputType.dummyOptions[i].showOption"  [(ngModel)]="inputType.dummyOptions[i].dummyOptionModel" class="input-sm" (keyup.enter)="inputType.Answer.AnswerOptionsText[j]=inputType.dummyOptions[j].dummyOptionModel;inputType.dummyOptions[i].showOption=false;" (blur)="inputType.Answer.AnswerOptionsText[j]=inputType.dummyOptions[j].dummyOptionModel;inputType.dummyOptions[i].showOption=false;">
+              </label>
+              <button style="margin-left: 18%" class="btn" (click)="inputType.Answer.AnswerOptionsText.push('Option'+(inputType.Answer.AnswerOptionsText.length+1));inputType.dummyOptions.push({});">+</button>
+          </div>
+          <div *ngIf="inputType.QuestionType==4 || inputType.QuestionType==8">
+              <br/>
+              <div>
+                <table class="table table-bordered">
+                  <thead>
+                  <tr>
+                      <th *ngFor="let column of inputType.SubQuestions[0]?.Rows[0]?.Columns; ">
+                          <span *ngIf="!column.showa" (click)="column.showa=true">{{column.ColumnName}}</span>
+                          <input [focus]="column.showa" *ngIf="column.showa==true" (focusout)="column.showa=false" [(ngModel)]="column.ColumnName"/>
+                      </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <tr>                      
+                    </tr>
+                      <tr *ngFor="let question of inputType.SubQuestions;let j=index;">                         
+                            <td *ngFor="let rowColumn of question.Rows[0].Columns;let k=index">
+                                  <div *ngIf="rowColumn.ColumnType == 'label'">
+                                    <span *ngIf="!rowColumn.show" (click)="rowColumn.show=true">{{rowColumn.ColumnValue}}</span>
+                                    <input [focus]="rowColumn.show" *ngIf="rowColumn.show==true" (focusout)="rowColumn.show=false" [(ngModel)]="rowColumn.ColumnValue"/>
+                                  </div>
+                                  <div *ngIf="rowColumn.ColumnType == 'textfield'">
+                                    <input type="text" [(ngModel)]="rowColumn.ColumnValue"/>
+                                  </div>
+                                  <div *ngIf="rowColumn.ColumnType == 'radio'">
+                                    <label><input name="tabOpt{{i}}{{j}}{{k}}" [(ngModel)]="rowColumn.ColumnValue" value="True" type="radio"/> Yes </label>
+                                    <label><input name="tabOpt{{i}}{{j}}{{k}}+'No'" [(ngModel)]="rowColumn.ColumnValue" value="False" type="radio"/> No</label>
+                                  </div>
+                                  <div *ngIf="rowColumn.ColumnType == 'checkbox'">
+                                    <input type="checkbox" [(ngModel)]="rowColumn.ColumnValue"/>
+                                  </div>
+                              </td>                           
+                        </tr>            
+                  </tbody>
+                </table>
+                  <button class="btn pointer" (click)="addRow(inputType)">Add row</button>
+                  <button class="btn pointer" (click)="addColumn(inputType,'checkbox')">Add checkbox Column</button>
+                  <button class="btn pointer" (click)="addColumn(inputType,'radio')">Add radio Column</button>
+                  <button class="btn pointer" (click)="addColumn(inputType,'textfield')">Add text field Column</button>
+              </div>
+          </div>
+          <div *ngIf="inputType.QuestionType==6">
+            <br/>
+              <div *ngFor="let question of inputType.SubQuestions;let j=index">
+                <div  style="width:100%;height:28px">                    
+                    <div>
+                        <span style="float:left">{{i+1}}.{{j+1}}</span>
+                        <div  style="float:left" *ngFor="let rowColumn of question.Rows[0].Columns;let k=index">                    
+                            <div *ngIf="rowColumn.ColumnType == 'label'">
+                                <span class="label1" *ngIf="!rowColumn.show" (click)="rowColumn.show=true">{{rowColumn.ColumnValue}}</span>
+                                <input [focus]="rowColumn.show" *ngIf="rowColumn.show==true" (focusout)="rowColumn.show=false" [(ngModel)]="rowColumn.ColumnValue"/>
+                            </div>
+                              <input *ngIf="rowColumn.ColumnType == 'textfield'" type="text" [(ngModel)]="rowColumn.ColumnValue"/>
+                              <label *ngIf="rowColumn.ColumnType == 'radio'"><input name="tabOpt{{i}}{{j}}{{k}}" [(ngModel)]="rowColumn.ColumnValue" value="True" type="radio"/> Yes </label>
+                              <label *ngIf="rowColumn.ColumnType == 'radio'"><input name="tabOpt{{i}}{{j}}{{k}}+'No'" [(ngModel)]="rowColumn.ColumnValue" value="False" type="radio"/> No</label>
+                              <input *ngIf="rowColumn.ColumnType == 'checkBox'" type="checkbox" [(ngModel)]="rowColumn.ColumnValue"/>
+                          </div>
+                    </div>  
+                    <br/>                  
+                </div>                
+              </div>
+                <table style="width:100%">
+                  <tr>
+                    <td colspan="3">
+                      <button class="btn" (click)="addRowForLabel(inputType, 'checkBox')">Add checkbox row</button>
+                      <button class="btn" (click)="addRowForLabel(inputType,'radio')">Add radio row</button>
+                      <button class="btn" (click)="addRowForLabel(inputType,'textfield')">Add text field row</button>
+                    </td>
+                  </tr>
+                </table>
+          </div>
+          <div *ngIf="inputType.QuestionType==5" style="margin-bottom: 4rem"> 
+              <input type="date" class="form-control input-md" [(ngModel)]="inputType.Answer.AnswerText"/>
+          </div>
+          <div *ngIf="inputType.QuestionType==7"> 
+              <br/>
+              <div *ngFor="let answer of inputType.Answers;let j=index;">
+                  <input class="form-control input-md" style="width:40%;margin:3px;margin-right:500px;" [(ngModel)]="answer.AnswerText">
+              </div>
+              <button class="btn" (click)="inputType.Answers.push({'AnswerText':''})">Add Text Field</button>
+              <br/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

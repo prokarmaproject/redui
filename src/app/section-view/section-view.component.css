@@ -1,0 +1,112 @@
+.card-header{
+  width:90%;
+}
+
+.panel{
+  width:100%;
+  font-weight: bold;
+  font-size: 14px;
+  float: left;
+}
+.panel-heading{
+  height:45px;
+  text-align: center;
+}
+label{
+  font-family: "Arial";
+  font-size: 13px;
+  color: black;
+}
+
+.tools-div {
+  padding: 5px;
+  margin: 5px;
+}
+.panel2 {
+  width:71%;
+  height: 500px;
+  float: left;
+  margin-left: 22px;
+}
+.input-md {
+  width:70%;
+  float: left;
+}
+
+.form-dropdown {
+  float: right;
+  width:20%
+}
+.option {
+  font-size: 13px;
+  font-family: "Arial";
+}
+.btn-right {
+  float: right;
+  line-height: 1;
+}
+.radio {
+  margin-left: 20px;
+}
+.checkbox {
+  margin-left: 20px;
+}
+.form-element {
+  margin:10px;
+}
+.accordion-item {
+  background-color: #286090 !important;
+  border: solid 1px #204d74 !important;
+  border-radius: 5px !important;
+  padding:12px;
+  margin-left: -21px;
+  padding-left: 42px;
+  padding-top: 12px;
+  padding-bottom: 22px;
+}
+.card-header {
+  background-color: #286090 !important;
+  padding:0px !important;
+}
+.section-title{
+  color:white;
+  text-align: center;
+}
+.content {
+  height: 100%;
+  padding-left: 50px;
+  background-color: #f5f5f5;
+}
+.label-title {
+  font-weight: bold;
+  font-size: 15px;
+  width:100%;
+}
+.each-element {
+  /* padding-top:5px;
+  padding-bottom:40px; */
+  margin-bottom: 5rem;
+}
+.inner-div {
+  background-color: #E0F6FD;
+}
+.table {
+  width:70%;
+  margin-left: 17px;
+  margin-top: 10px;
+}
+.table-width-sl {
+  width:15%;
+}
+.table-width-title {
+  width:70%;
+}
+.table-width-opt {
+  width:15%;
+}
+.body{
+  overflow-y: visible;
+}
+.option-width{
+  width:75%;
+}
