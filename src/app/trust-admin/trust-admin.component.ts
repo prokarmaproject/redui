@@ -14,6 +14,8 @@ export class TrustAdminComponent implements OnInit {
   public affiliateGroups:any =[];
   public newUserGrp:any={};
   public selectedGroup:any={};
+  public selectedSurvey:any;
+  public deleteGroup:any;
 
 
   public affiliateUsers:any =[];  

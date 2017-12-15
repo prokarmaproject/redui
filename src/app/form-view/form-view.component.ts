@@ -535,7 +535,7 @@ import {Directive, Input,Inject, ElementRef,ChangeDetectorRef} from '@angular/co
 export class FocusDirective {
     @Input('focus') focus:boolean;
     constructor(private el :ElementRef) {}
-      protected ngOnChanges(){
+      public ngOnChanges(){
         if(this.focus==true){
           setTimeout(() => {
             this.el.nativeElement.focus();

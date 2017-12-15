@@ -10,7 +10,7 @@ export class DataService {
   private headers = new Headers({'Content-Type': 'application/json',
   'Access-Control-Allow-Origin':'*'});
 
-  private serviceUrl = "http://localhost:8011/api";
+  private serviceUrl = "http://redapi.azurewebsites.net/api";
 
   constructor(private http: Http) { }
 
