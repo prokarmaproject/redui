@@ -112,7 +112,7 @@ sortSections(order:any){
       columnName : "Column 1",
       columnType : "label",
       columnValue : "Type Sub question",
-      columnOptions : []
+      columnOptions : [{columnOptionValue:"Option1"}]
     };
     let columns = [];
     columns.push(Column);
@@ -124,7 +124,7 @@ sortSections(order:any){
           columnName : column.columnName,
           columnType : column.columnType,
           columnValue : "",
-          columnOptions : []
+          columnOptions : [{columnOptionValue:"Option1"}]
         };
         columns.push(rowColumn);
       });

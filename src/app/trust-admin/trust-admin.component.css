@@ -81,3 +81,16 @@ a {
 .strike-text{
   text-decoration: line-through;
  }
+.nav-tabs .nav-item {
+  width: 50%;
+  text-align: center;
+}
+.nav{
+  width:94%;
+}
+.modal-header{
+  padding-bottom: 0px;
+}
+.nav-tabs {
+  border-bottom: 0px;
+}

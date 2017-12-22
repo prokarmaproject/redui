@@ -62,55 +62,6 @@ export class TrustAdminComponent implements OnInit {
     });
   }
 
-  //=================================================================
-  //=============================================================
-
-  getAffGroupsForSurvey(surveyId:any){
-    this.dataService.getSurveyAffiliates(surveyId).subscribe(response => {
-      this.affiliateGroups = response[0].affiliateGroups;
-    });
-  }
-  
-  importGroups(surveyId:any,group:any){
-    var users = [];
-    group.users.forEach(function(user){
-      let userObj = {
-        "RoleType": user.roleType,
-        "WindowsUserLogin": user.windowsUserLogin,
-        "IsGlobal": user.isGlobal
-      };
-      users.push(userObj)      ;
-    });
-
-    let req ={
-      SurveyId: surveyId,
-      AffiliateName: group.affiliateGroupName,
-      AffiliateCode : group.affiliateGroupCode,
-      AffiliateRegion:group.regionName,
-      AffiliateId:group.affiliateGroupId,
-      Users: users
-    };
-    console.log(JSON.stringify(req));
-    this.dataService.importGroupsToSurvey(req).subscribe(response => {
-      this.dataService.getSurveyAffiliates(surveyId).subscribe(response => {
-        this.affiliateGroups = response;
-      });
-    });
-  }
-  editSurveyGroups(surveyId:any,group:any){
-    
-  }
-  deleteSurveyGroups(surveyId:any,group:any){
-
-  }
-
-  copyGroups(fromSurveyId:any, toSurveyId:any){
-
-  }
-  
-  
-  
-
   addResource(groupId:any){
     this.affUser.groupId = groupId;
     this.affUser.isGlobal = false;
@@ -130,6 +81,8 @@ export class TrustAdminComponent implements OnInit {
       this.selectedUser ={};
       this.dataService.getAffiliateGroupsList().subscribe(response => {
         this.affiliateGroupsList = response;
+        this.selGrp = {};
+        this.selectedUser={};
       });
     });
   }
@@ -143,9 +96,114 @@ export class TrustAdminComponent implements OnInit {
     })
   }
 
+  importGroups(surveyId:any,group:any){
+    var users = [];
+    group.users.forEach(function(user){
+      let userObj = {
+        "RoleType": user.roleType,
+        "WindowsUserLogin": user.windowsUserLogin,
+        "IsGlobal": user.isGlobal
+      };
+      users.push(userObj);
+    });
 
+    let req ={
+      SurveyId: surveyId,
+      AffiliateName: group.affiliateGroupName,
+      AffiliateCode : group.affiliateGroupCode,
+      AffiliateRegion:group.regionName,
+      //AffiliateId:group.affiliateGroupId,
+      Users: users
+    };
+    console.log(JSON.stringify(req));
+    this.dataService.importGroupsToSurvey(req).subscribe(response => {
+      this.dataService.getSurveyAffiliates(surveyId).subscribe(response => {
+        this.selectedGroup = {};
+        this.affiliateGroups = response[0].affiliateGroups;
+      });
+    });
+  }
 
-  
+  getAffGroupsForSurvey(surveyId:any){
+    this.dataService.getSurveyAffiliates(surveyId).subscribe(response => {
+      this.affiliateGroups = response[0].affiliateGroups;
+    });
+  }
+
+  editSurveyGroups(survey:any,group:any){
+    var users = [];
+    group.users.forEach(function(user){
+      let userObj = {
+        "RoleType": user.roleType,
+        "WindowsUserLogin": user.windowsUserLogin,
+        "IsGlobal": user.isGlobal
+      };
+      users.push(userObj);
+    });
+
+    let req ={
+      SurveyId: survey.surveyId,
+      AffiliateName: group.affiliateGroupName,
+      AffiliateCode : group.affiliateGroupCode,
+      AffiliateRegion:group.regionName,
+      AffiliateId:group.affiliateGroupId,
+      Users: users
+    };
+    this.dataService.editSurveyAffliates(req).subscribe(response => {
+      this.dataService.getSurveyAffiliates(survey.surveyId).subscribe(response => {
+        this.selGrp = {};
+        this.affiliateGroups = response[0].affiliateGroups;
+      });
+    });
+  }
+  deleteSurveyGroups(surveyId:any,groupId:any){
+    this.dataService.removeSurveyAffiliates(surveyId,groupId).subscribe(response => {
+      this.dataService.getSurveyAffiliates(surveyId).subscribe(response => {
+        this.selGrp = {};
+        this.affiliateGroups = response[0].affiliateGroups;
+      });
+    });
+  }
+
+  copyGroups(fromSurveyId:any, toSurveyId:any){
+    var affiliatesToBeCopied = [];
+    this.dataService.getSurveyAffiliates(fromSurveyId).subscribe(response => {
+      affiliatesToBeCopied = response[0].affiliateGroups;
+    });
+    var affGroupsToBeCopied = [];
+    affiliatesToBeCopied.forEach(group => {
+      var users = [];
+      group.users.forEach(function(user){
+        let userObj = {
+          "RoleType": user.roleType,
+          "WindowsUserLogin": user.windowsUserLogin,
+          "IsGlobal": user.isGlobal
+        };
+        users.push(userObj);
+      });
+      var group:any = {
+        AffiliateId:group.affiliateGroupId,
+        AffiliateName: group.affiliateGroupName,
+        AffiliateCode : group.affiliateGroupCode,
+        AffiliateRegion:group.regionName,
+        Users: users
+      }
+      affGroupsToBeCopied.push(group);
+    });
+    let req ={
+      SurveyId: toSurveyId,
+      AffiliateGroups:affGroupsToBeCopied      
+    };
+    this.dataService.copyAffiliates(req).subscribe(response => {
+      console.log(response);
+    });
+  }
+
+  AddResouceToSurvey(user:any){
+
+  }
+  //=================================================================
+  //=============================================================
   
   constructor(private modalService: NgbModal, private dataService:DataService) { }
 

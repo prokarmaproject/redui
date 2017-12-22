@@ -188,3 +188,7 @@ label{
   border: 1px solid lightgray;
   cursor: pointer;
 }
+.survey-heading{
+  background-color: white;  
+  text-align: left;
+}

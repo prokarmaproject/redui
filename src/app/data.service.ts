@@ -76,6 +76,23 @@ export class DataService {
     return this.http.get(this.serviceUrl + '/SurveyAffiliate/'+id,  options)
         .map(this.extractData);
   }
+  editSurveyAffliates(req:any){
+    let options = new RequestOptions({headers: this.headers});
+    return this.http.put(this.serviceUrl + '/SurveyAffiliate/', req, options)
+        .map(this.deletedata);
+  }
+
+  removeSurveyAffiliates(surveyId:any, groupId:any){
+    let options = new RequestOptions({headers: this.headers});
+    return this.http.delete(this.serviceUrl + '/SurveyAffiliate/DeleteGroup/'+surveyId + "/"+groupId)
+        .map(this.deletedata);
+  }
+
+  copyAffiliates(req){
+    let options = new RequestOptions({headers: this.headers});
+    return this.http.post(this.serviceUrl, req, options)
+        .map(this.deletedata);
+  }
 
   getAffiliateGroupsList(){
     let options = new RequestOptions({headers: this.headers});

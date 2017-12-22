@@ -100,7 +100,9 @@ export class FormViewComponent implements OnInit {
       "Columns":[
         {
         "ColumnName": "Column 1",
-        "ColumnType":"label"}
+        "ColumnType":"label",
+        "ColumnOptions":[{ColumnOptionValue:"Option1"}]
+        }
         ],
       "Class":""
     },
@@ -117,7 +119,8 @@ export class FormViewComponent implements OnInit {
       "Columns":[
         {
         "ColumnName": "Column 1",
-        "ColumnType":"label"}
+        "ColumnType":"label",
+        "ColumnOptions":[{ColumnOptionValue:"Option1"}]}
         ],
       "Class":""
     },
@@ -158,13 +161,13 @@ export class FormViewComponent implements OnInit {
       ColumnName : "Column 1",
       ColumnType : "label",
       ColumnValue : "Type Sub question",
-      ColumnOptions : []
+      ColumnOptions : [{ColumnOptionValue:"Option1"},{ColumnOptionValue:"Option2"}]
       },
       {
         ColumnName : "Column 2",
         ColumnType : type,
         ColumnValue : "Type Sub question",
-        ColumnOptions : []
+        ColumnOptions : [{ColumnOptionValue:"Option1"},{ColumnOptionValue:"Option2"}]
       }
     ];
     row.Columns = Columns; 
@@ -185,7 +188,7 @@ export class FormViewComponent implements OnInit {
       ColumnName : "Column 1",
       ColumnType : "label",
       ColumnValue : "Type Sub question",
-      ColumnOptions : []
+      ColumnOptions : [{ColumnOptionValue:"Option1"}]
     };
     let columns = [];
     columns.push(Column);
@@ -197,7 +200,7 @@ export class FormViewComponent implements OnInit {
         ColumnName : column.ColumnName,
         ColumnType : column.ColumnType,
         ColumnValue : "",
-        ColumnOptions : []
+        ColumnOptions : [{ColumnOptionValue:"Option1"}]
       };
       columns.push(rowColumn);
     });
@@ -223,7 +226,7 @@ export class FormViewComponent implements OnInit {
           ColumnName : column.ColumnName,
           ColumnType : column.ColumnType,
           ColumnValue : "",
-          ColumnOptions : []
+          ColumnOptions : [{ColumnOptionValue:"Option1"}]
         };
         question.Rows[0].Columns.push(rowColumn);
       });
@@ -284,9 +287,7 @@ export class FormViewComponent implements OnInit {
     //this.dialogService.addDialog(AlertComponent,{title:'Success!', message:'Package Updated Successfully!!!'});
     newPackage.sections = null;
     newPackage.affiliateGroups = null;
-    console.log(newPackage);
     this.dataService.createSurvey(newPackage).subscribe(response => {
-      console.log(response);
       this.currentSurvey = response[0];
       if(newPackage.packageLocked == false){
         this.openForm = false;
@@ -301,7 +302,6 @@ export class FormViewComponent implements OnInit {
   }
 
   updatePackage(updatePackage:any){
-    console.log(JSON.stringify(updatePackage));
     this.dataService.updateSurvey(updatePackage).subscribe(response => {
       this.currentSurvey = response;
       if(updatePackage.packageLocked == false){
@@ -451,11 +451,18 @@ export class FormViewComponent implements OnInit {
                   ColumnName : column.columnName,
                   ColumnType : column.columnType
                 }
+                var colOptions = [];
+                column.columnOptions.forEach(colOption => {
+                  var colOp = {
+                    "ColumnOptionValue":colOption.columnOptionValue
+                  }
+                  colOptions.push(colOp);
+                });
                 var rowColumn = {
                   "ColumnName": column.columnName,
                   "ColumnType": column.columnType,
                   "ColumnValue": column.columnValue,
-                  "ColumnOptions": column.columnOptions                 
+                  "ColumnOptions": colOptions
                 }
                 columns.push(rowColumn);
                 row.Columns = columns;

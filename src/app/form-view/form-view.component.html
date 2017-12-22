@@ -81,9 +81,15 @@
             <label><input type="radio" [(ngModel)]="newPackage.packageLocked" [value]="false"> No </label>
           </div>
         </div>
+        <div class="each-element1">
+          <label class="label1" for="heading">Heading</label>
+          <div id="heading">
+            <input [(ngModel)]="newPackage.heading" class="form-control input-sm1 col-xs-4"/>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="panel-footer align-center">
+    <div class="panel-footer align-center" style="margin-top:-20px">
       <button *ngIf="!updateButton" class="btn btn-default" (click)="createPackage(newPackage)">Create</button>
       <button *ngIf="updateButton" class="btn btn-default" (click)="updatePackage(newPackage)">Update</button>
     </div>
@@ -129,11 +135,14 @@
     <div class="panel-heading">
       <label>Survey</label>
       <button [disabled]="ques?.length <1 " class="btn btn-primary btn-right" style="line-height: 0.8;margin-top: -5px;"  (click)="saveData()">Save</button>
-    </div>
+    </div>    
     <div class="panel-body scroll" style="width:100%" [dragula]='"que-bag"' id="right" [dragulaModel]="ques">
+      <div class="panel-heading survey-heading">
+        <label>This is Survey Heading</label>
+      </div>
       <div class="form-group" *ngFor="let inputType of ques;let i=index;">
         <div class="form-element">
-          <label style="cursor:pointer;" [title]="inputType.SectionName" *ngIf="!inputType.showQueBox" (click)="inputType.showQueBox=true;inputType.dummyModel=inputType.QuestionName" ><span style="float:left">{{i+1+". "}}</span><span style="float:left" [innerHtml]="inputType.QuestionName | keepHtml"></span></label>
+          <label style="cursor:pointer;" (click)='inputType.showQueBox=true;inputType.dummyModel=inputType.QuestionName' [title]="inputType.SectionName" *ngIf="!inputType.showQueBox"><span style="float:left">{{i+1+". "}}</span><span style="float:left" [innerHtml]="inputType.QuestionName | keepHtml"></span></label>
           <simple-tiny style="float:left" *ngIf="inputType.showQueBox==true" [(ngModel)]="inputType.dummyModel" (modelChange)="inputType.SectionName = $event" (blur)="inputType.showQueBox=false"></simple-tiny>
           <span *ngIf="inputType.showQueBox==true" aria-hidden="true" class="fa fa-check check-icon" (click)="inputType.QuestionName=inputType.dummyModel.replace('Section 1','');inputType.showQueBox=false;"></span>
           <!-- <div  *ngIf="inputType.showQueBox==true">
@@ -192,12 +201,29 @@
                                   <div *ngIf="rowColumn.ColumnType == 'textfield'">
                                     <input type="text" [(ngModel)]="rowColumn.ColumnValue"/>
                                   </div>
-                                  <div *ngIf="rowColumn.ColumnType == 'radio'">
-                                    <label><input name="tabOpt{{i}}{{j}}{{k}}" [(ngModel)]="rowColumn.ColumnValue" value="True" type="radio"/> Yes </label>
-                                    <label><input name="tabOpt{{i}}{{j}}{{k}}+'No'" [(ngModel)]="rowColumn.ColumnValue" value="False" type="radio"/> No</label>
+                                  <div *ngIf="rowColumn.ColumnType == 'radio'"> 
+                                    <div *ngFor="let element of rowColumn.ColumnOptions; let m = index;">
+                                        <label>
+                                          <input type="radio"
+                                          [checked]="rowColumn.ColumnValue==element.ColumnOptionValue" (change)="rowColumn.ColumnValue=element.ColumnOptionValue">
+                                          <span style="width:60%" style="word-break:break-all" *ngIf="!element.showOption" (click)="element.showOption=true" >{{element.ColumnOptionValue}}<img class="edit-image" src="assets/img/edit.png"/></span>
+                                          <input *ngIf="element.showOption"  [(ngModel)]="element.ColumnOptionValue" class="input-sm" (focusout)="element.showOption=false;">
+                                        </label>
+                                        <br/>
+                                      </div>                                    
+                                      <button style="margin-left: 18%" class="btn" (click)="rowColumn.ColumnOptions.push({ColumnOptionValue:'option '+(rowColumn.ColumnOptions.length+1)});">+</button>
                                   </div>
                                   <div *ngIf="rowColumn.ColumnType == 'checkbox'">
-                                    <input type="checkbox" [(ngModel)]="rowColumn.ColumnValue"/>
+                                    <div *ngFor="let element of rowColumn.ColumnOptions; let m = index;">
+                                        <label>
+                                          <input type="checkbox"
+                                          [checked]="rowColumn.ColumnValue==element.ColumnOptionValue" (change)="rowColumn.ColumnValue=element.ColumnOptionValue">
+                                          <span style="word-break:break-all" *ngIf="!element.showOption" (click)="element.showOption=true" >{{element.ColumnOptionValue}}<img class="edit-image" src="assets/img/edit.png"/></span>
+                                          <input *ngIf="element.showOption"  [(ngModel)]="element.ColumnOptionValue" class="input-sm" (focusout)="element.showOption=false;">
+                                        </label>
+                                        <br/>
+                                    </div>                                      
+                                    <button style="margin-left: 18%" class="btn" (click)="rowColumn.ColumnOptions.push({ColumnOptionValue:'option '+(rowColumn.ColumnOptions.length+1)});">+</button>
                                   </div>
                               </td>                           
                         </tr>            

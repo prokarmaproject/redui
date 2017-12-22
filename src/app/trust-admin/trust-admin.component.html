@@ -24,7 +24,7 @@
             <a href="#" (click)="open(importGroup)">Import Affiliate</a>
             <a href="#" (click)="open(editSurveyAffiliate)">Edit Survey Affiliate(s)</a>
             <a href="#" (click)="open(copyGroups)">Copy Survey Affiliates</a>
-            <a href="#" (click)="open(deleteGroup)">Edit Survey User List</a>
+            <a href="#" (click)="open(editSurveyUsers)">Edit Survey User List</a>
           </div>
           <select [(ngModel)]="selectedSurvey" (change)="getAffGroupsForSurvey(selectedSurvey.surveyId)">
             <option selected>Select Survey</option>
@@ -164,7 +164,7 @@
     <template #editUser  class="modal-placement" let-c="close" let-d="dismiss">
       <div class="modal-header">
         <h4 class="modal-title align-center">Edit Resource</h4>
-        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');selectedUser={};selGrp={}">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -209,59 +209,26 @@
 
     <!-- Import Group -->
     <template #importGroup class="modal-placement" let-c="close" let-d="dismiss">
-        <div class="modal-header">
-          <h4 class="modal-title align-center">Import Affiliate</h4>
-          <button type="button" class="close" aria-label="Close" (click)="d('Cross click');selectedGroup={}">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="modal-element">
-            <div class="modal-label"><label>Select Affiliate</label></div>
-            <div class="modal-value">
-              <select class="modal-dropdown" [(ngModel)]="selectedGroup">
-                <option>Select Affiliate</option>
-                <option [ngValue]="group" *ngFor="let group of affiliateGroupsList">{{group.affiliateGroupName}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="modal-element">
-            <div class="modal-label"><label>To Survey</label></div>
-            <div class="modal-value">
-              <select disabled class="modal-dropdown" [(ngModel)]="selectedSurvey">
-                <option>Select Survey</option>
-                <option [ngValue]="package" *ngFor="let package of packages">{{package.title+ " " + package.version}}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-dark" (click)="c('Close click');importGroups(selectedSurvey.surveyId,selectedGroup)">Import</button>
-        </div>
-      </template>
-
-    <!-- copy Groups -->
-    <template #copyGroups class="modal-placement" let-c="close" let-d="dismiss">
       <div class="modal-header">
-        <h4 class="modal-title align-center">Copy Affiliates</h4>
+        <h4 class="modal-title align-center">Import Affiliate</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click');selectedGroup={}">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="modal-element">
-          <div class="modal-label"><label>From Survey</label></div>
+          <div class="modal-label"><label>Select Affiliate</label></div>
           <div class="modal-value">
-            <select class="modal-dropdown" [(ngModel)]="fromSurvey">
-              <option>Select Survey</option>
-              <option [ngValue]="package" *ngFor="let package of packages">{{package.title+ " " + package.version}}</option>
+            <select class="modal-dropdown" [(ngModel)]="selectedGroup">
+              <option>Select Affiliate</option>
+              <option [ngValue]="group" *ngFor="let group of affiliateGroupsList">{{group.affiliateGroupName}}</option>
             </select>
           </div>
         </div>
         <div class="modal-element">
           <div class="modal-label"><label>To Survey</label></div>
           <div class="modal-value">
-            <select class="modal-dropdown" [(ngModel)]="toSurvey">
+            <select disabled class="modal-dropdown" [(ngModel)]="selectedSurvey">
               <option>Select Survey</option>
               <option [ngValue]="package" *ngFor="let package of packages">{{package.title+ " " + package.version}}</option>
             </select>
@@ -269,10 +236,11 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="c('Close click');copyGroups(fromSurvey.surveyId,toSurvey.surveyId)">Import</button>
+        <button type="button" class="btn btn-outline-dark" (click)="c('Close click');importGroups(selectedSurvey.surveyId,selectedGroup)">Import</button>
       </div>
     </template>
 
+    
     <!-- Edit Survey Affiliates -->
   <template #editSurveyAffiliate class="modal-placement" let-c="close" let-d="dismiss">
     <div class="modal-header">
@@ -305,7 +273,122 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button style="margin-right:53%" type="button" class="btn btn-outline-dark" (click)="c('Close click');deleteSurveyGroups(selectedSurvey.surveyId,selGrp)">Remove Affiliate</button>
-      <button style="float:right" type="button" class="btn btn-outline-dark" (click)="c('Close click');editSurveyGroups(selectedSurvey.surveyId,selGrp)">Update</button>        
+        <button style="margin-right:53%" type="button" class="btn btn-outline-dark" (click)="c('Close click');deleteSurveyGroups(selectedSurvey.surveyId,selGrp.affiliateGroupId)">Remove Affiliate</button>
+      <button style="float:right" type="button" class="btn btn-outline-dark" (click)="c('Close click');editSurveyGroups(selectedSurvey,selGrp)">Update</button>        
+    </div>
+  </template>
+
+  <!-- copy Groups -->
+  <template #copyGroups class="modal-placement" let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title align-center">Copy Affiliates</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click');selectedGroup={}">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-element">
+        <div class="modal-label"><label>From Survey</label></div>
+        <div class="modal-value">
+          <select class="modal-dropdown" [(ngModel)]="fromSurvey">
+            <option>Select Survey</option>
+            <option [ngValue]="package" *ngFor="let package of packages">{{package.title+ " " + package.version}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-element">
+        <div class="modal-label"><label>To Survey</label></div>
+        <div class="modal-value">
+          <select class="modal-dropdown" [(ngModel)]="toSurvey">
+            <option>Select Survey</option>
+            <option [ngValue]="package" *ngFor="let package of packages">{{package.title+ " " + package.version}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="c('Close click');copyGroups(fromSurvey.surveyId,toSurvey.surveyId)">Import</button>
+    </div>
+  </template>
+<!-- EditSurveyUsers -->
+<template #editSurveyUsers class="modal-placement" let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#add" role="tab" aria-controls="add">Add User</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#edit" role="tab" aria-controls="edit">Edit User</a>
+            </li>
+          </ul>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click');selectedGroup={}">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" style="height:250px;">
+          <div class="tab-content">
+            <div class="tab-pane active" id="add" role="tabpanel">
+                <div class="modal-element">
+                    <div class="modal-label"><label>Select Affiliate</label></div>
+                    <div class="modal-value">
+                      <select class="modal-dropdown" [(ngModel)]="newUserGrp">
+                        <option>Select Affiliate</option>
+                        <option [ngValue]="group" *ngFor="let group of affiliateGroups">{{group.affiliateGroupName}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="modal-element">
+                    <div class="modal-label"><label>Window ID</label></div>
+                    <div class="modal-value"><input name="windowId" [(ngModel)]="affUser.windowsUserLogin"/></div>
+                  </div>
+                  <div class="modal-element">
+                    <div class="modal-label"><label>Role</label></div>
+                    <div class="modal-value">
+                      <select class="modal-dropdown" [(ngModel)]="affUser.roleType"><option>Select Role</option>
+                        <option [ngValue]="1">STAFF</option><option [ngValue]="2">NO ROLE</option>
+                        <option [ngValue]="3">MANAGER</option><option [ngValue]="4">EXECUTIVE</option>
+                        <option [ngValue]="5">CID ANALYST</option>
+                      </select>
+                    </div>
+                  </div>
+            </div>
+            <div class="tab-pane" id="edit" role="tabpanel">
+              <div class="modal-element">
+                <div class="modal-label"><label>Select Affiliate</label></div>
+                <div class="modal-value">
+                  <select class="modal-dropdown" [(ngModel)]="selGrp">
+                    <option>Select Affiliate</option>
+                    <option [ngValue]="group" *ngFor="let group of affiliateGroups">{{group.affiliateGroupName}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-element">
+                <div class="modal-label"><label>Select Resource</label></div>
+                <div class="modal-value"><select class="modal-dropdown" [(ngModel)]="selectedUser">
+                    <option>Select Resource</option>
+                    <option [ngValue]="user" *ngFor="let user of selGrp.users">{{user.windowsUserLogin}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-element">
+                <div class="modal-label"><label>Window ID</label></div>
+                <div class="modal-value"><input name="windowId" [(ngModel)]="selectedUser.windowsUserLogin"/></div>
+              </div>
+              <div class="modal-element">
+                <div class="modal-label"><label>Role</label></div>
+                <div class="modal-value">
+                  <select class="modal-dropdown" [(ngModel)]="selectedUser.roleType"><option>Select Role</option>
+                    <option [ngValue]="1">STAFF</option><option [ngValue]="2">NO ROLE</option>
+                    <option [ngValue]="3">MANAGER</option><option [ngValue]="4">EXECUTIVE</option>
+                    <option [ngValue]="5">CID ANALYST</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="c('Close click');copyGroups(fromSurvey.surveyId,toSurvey.surveyId)">Import</button>
     </div>
   </template>

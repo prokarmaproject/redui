@@ -46,11 +46,12 @@ export class SimpleTinyComponent implements AfterViewInit, OnDestroy,  ControlVa
       },
       min_height: 45,
       width: 540,
-      statusbar: false,
-      // toolbar: 'mybutton',
+      statusbar: true,
+      elementpath:false,
       toolbar: [
-    'undo redo | bold italic underline strikethrough | link image '
-  ],
+        'undo redo | fontsizeselect | bold italic underline strikethrough | link image '
+      ],
+      fontsize_formats: "8pt 10pt 11pt 12pt 14pt 16pt 18pt 20pt",
       plugins: ['link', 'paste', 'table'],
       // setup: editor => {
       //   this.editor = editor;
