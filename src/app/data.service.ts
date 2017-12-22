@@ -96,7 +96,7 @@ export class DataService {
 
   getAffiliateGroupsList(){
     let options = new RequestOptions({headers: this.headers});
-    return this.http.get(this.serviceUrl + '/affiliate/',  options)
+    return this.http.get(this.serviceUrl + '/SurveyAffiliate/GetMasterAffGroup/6',  options)
         .map(this.extractData);
   }
  

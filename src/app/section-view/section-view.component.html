@@ -115,7 +115,7 @@
                           </th>
                         </tr>
                         </thead>
-                        <tbody *ngIf="inputType.subQuestions.length>0">
+                        <tbody style="background-color:white" *ngIf="inputType.subQuestions.length>0">
                             <tr *ngFor="let question of inputType.subQuestions;let j=index;">
                                 <td  *ngFor="let rowColumn of question.rows[0].columns | orderBy: 'subQuestionColumnId'">
                                       <div *ngIf="rowColumn.columnType == 'label'">
@@ -150,8 +150,8 @@
                                         <button style="margin-left: 18%" class="btn" (click)="rowColumn.columnOptions.push({columnOptionValue:'option '+(rowColumn.columnOptions.length+1)});">+</button>
                                       </div>
                                   </td>
-                                  <span style="cursor:pointer" (click)="deleteTheRow(inputType,j)">delete</span>
-                            </tr>            
+                                  <button class="btn pointer"><span (click)="deleteTheRow(inputType,j)">delete</span></button>
+                            </tr> 
                         </tbody>
                     </table>
                     <button class="btn pointer" (click)="addRow(inputType)">Add row</button>

@@ -98,14 +98,16 @@ export class TrustAdminComponent implements OnInit {
 
   importGroups(surveyId:any,group:any){
     var users = [];
-    group.users.forEach(function(user){
-      let userObj = {
-        "RoleType": user.roleType,
-        "WindowsUserLogin": user.windowsUserLogin,
-        "IsGlobal": user.isGlobal
-      };
-      users.push(userObj);
-    });
+    if(group.users && group.users.length>0){
+      group.users.forEach(function(user){
+        let userObj = {
+          "RoleType": user.roleType,
+          "WindowsUserLogin": user.windowsUserLogin,
+          "IsGlobal": user.isGlobal
+        };
+        users.push(userObj);
+      });
+    }    
 
     let req ={
       SurveyId: surveyId,
