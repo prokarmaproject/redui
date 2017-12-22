@@ -228,7 +228,7 @@
         <div class="modal-element">
           <div class="modal-label"><label>To Survey</label></div>
           <div class="modal-value">
-            <select disabled class="modal-dropdown" [(ngModel)]="selectedSurvey">
+            <select class="modal-dropdown" [(ngModel)]="selectedSurvey">
               <option>Select Survey</option>
               <option [ngValue]="package" *ngFor="let package of packages">{{package.title+ " " + package.version}}</option>
             </select>
